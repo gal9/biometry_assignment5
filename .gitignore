@@ -129,5 +129,11 @@ dmypy.json
 .pyre/
 
 /data/images
+/data/cropped_gt
 /data/cropped
+/data/cropped_train_gt
+/data/cropped_test_gt
+/data/cropped_train
+/data/cropped_test
 /data/masks
+/data/trained
