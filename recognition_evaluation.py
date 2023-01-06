@@ -1,25 +1,35 @@
-from src.workflow import workflow
+import os
+from src.recognition import recognize
+from src.data import read_grayscale_image
 
-#workflow([(1, 8), (2, 8), (3, 8), (4, 8)], methode="LBP_uniform")
+test_folder = "./data/cropped_test_gt"
 
-workflow([(1, 8), (2, 8), (2, 12), (3, 8), (3, 16), (4, 8), (8, 16)], methode="LBP_histogram_8x8")
+count_all = 0
+tp_rank1 = 0
+tp_rank5 = 0
 
-"""
-workflow([(1, 8), (2, 8), (2, 12), (3, 8), (3, 16), (4, 8), (8, 16)], methode="LBP_histogram_4x4")
+# Loop through data directory and transform all the images
+for folder_number in os.listdir(test_folder):
+    persone_folder_path = os.path.join(test_folder, folder_number)
 
-workflow([(1, 8), (2, 8), (2, 12), (3, 8), (3, 16), (4, 8), (8, 16)], methode="LBP_histogram_16x16")
-workflow([(1, 8), (2, 8), (2, 12), (3, 8), (3, 16), (4, 8), (8, 16)], methode="sklearn_lbp")
+    if os.path.isdir(persone_folder_path):
+        for image_file in os.listdir(persone_folder_path):
+            count_all += 1
 
-workflow([(1, 8), (2, 8), (3, 8), (4, 8)], methode="LBP_histogram_16x16", width=64, height=64)
+            image_location = os.path.join(persone_folder_path, image_file)
+            image_grayscale = read_grayscale_image(image_location, 128, 128)
 
-workflow([(2, 8)], methode="LBP", width=64, height=64)
+            prediction = recognize(image_grayscale, "./data/trained_gt")
 
-workflow([(2, 8), (3, 8), (4, 8)], methode="LBP_histogram_8x8", width=64, height=64)
+            people_ranked = [path[0][-10:-7] for path in prediction]
 
-workflow([(1, 8), (2, 8), (3, 8), (4, 8)], methode="LBP_histogram_16x16", width=64, height=128)
+            print(f"Sample {image_location} recognized as {people_ranked[0]}")
 
-workflow([(2, 8)], methode="LBP", width=64, height=128)
-
-workflow([(2, 8), (3, 8), (4, 8)], methode="LBP_histogram_8x8", width=64, height=128)
-
-workflow([(0, 0)], methode="pixel_by_pixel", width=128, height=128)"""
+            if(people_ranked[0] == folder_number):
+                tp_rank1 += 1
+                tp_rank5 += 1
+            elif(folder_number in people_ranked[:5]):
+                tp_rank5 += 1
+            
+print(f"rank-1: {tp_rank1/count_all}")
+print(f"rank-5: {tp_rank5/count_all}")

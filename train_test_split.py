@@ -1,9 +1,9 @@
 import os
 import shutil
 
-folder = "./data/cropped"
-train_folder = "./data/cropped_train"
-test_folder = "./data/cropped_test"
+folder = "./data/images"
+train_folder = "./data/images_train"
+test_folder = "./data/images_test"
 
 
 # Check if dir exists and create it otherwise

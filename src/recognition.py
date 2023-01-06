@@ -1,6 +1,10 @@
 import sys
+import os
 from sklearn.metrics import pairwise_distances
 import numpy as np
+from scipy.spatial.distance import cosine
+
+from src.features import flatten_image, LBP_interpolation, LBP_uniform, LBP_histogram
 
 
 def euclidian_distance_recognition(target_image_flattened, images_flattened,
@@ -78,3 +82,40 @@ def TP_rate_from_distances(distance_mtx):
             TP += 1
 
     return (TP/len(distance_mtx))
+
+
+def recognize(image, model_folder: str) -> str:
+    """
+    Inputted image is in grayscale format and resized to 128x128
+    """
+
+    template = LBP_histogram(image, 2, 8, 16, 16, 128, 128)
+
+    results = []
+
+    # Loop through data directory and transform all the images
+    for folder_number in os.listdir(model_folder):
+        persone_template_path = os.path.join(model_folder, folder_number)
+
+        if os.path.isdir(persone_template_path):
+            for image_file in os.listdir(persone_template_path):
+                template_location = os.path.join(persone_template_path, image_file)
+                print(f"comparing to {template_location}", end="\r")
+
+                # Read the tamplate
+                with open(template_location, "r") as template_f:
+                    target_template = [float(el) for el in template_f.read().split()]
+                
+                # Calculate the distance
+                distance = cosine(template, target_template)
+
+                results.append((str(template_location), distance))
+
+    # Sort results closest first
+    results = sorted(results, key= lambda x: x[1])
+
+    return results
+                
+                
+
+

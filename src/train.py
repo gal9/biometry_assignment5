@@ -4,11 +4,9 @@ from src.data import read_grayscale_image
 from src.features import flatten_image, LBP_interpolation, LBP_uniform, LBP_histogram
 
 
-def train_recognition(methode="LBP", width: int = 128, height: int = 128):
-    model_folder = "./data/trained"
-    train_folder = "./data/cropped_train"
-
-    
+def train_recognition(methode="LBP", model_folder = "./data/trained_gt",
+                      train_folder = "./data/cropped_train_gt",
+                      width: int = 128, height: int = 128):    
     if(not os.path.isdir(model_folder)):
         os.makedirs(model_folder)
 
