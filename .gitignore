@@ -141,3 +141,4 @@ dmypy.json
 /data/masks
 /data/trained_gt
 /data/trained
+/data/boxes_trained
