@@ -7,6 +7,9 @@ test_folder = "./data/cropped_test_gt"
 count_all = 0
 tp_rank1 = 0
 tp_rank5 = 0
+tp_rank10 = 0
+tp_rank15 = 0
+tp_rank20 = 0
 
 # Loop through data directory and transform all the images
 for folder_number in os.listdir(test_folder):
@@ -28,8 +31,26 @@ for folder_number in os.listdir(test_folder):
             if(people_ranked[0] == folder_number):
                 tp_rank1 += 1
                 tp_rank5 += 1
+                tp_rank10 += 1
+                tp_rank15 += 1
+                tp_rank20 += 1
             elif(folder_number in people_ranked[:5]):
                 tp_rank5 += 1
-            
+                tp_rank10 += 1
+                tp_rank15 += 1
+                tp_rank20 += 1
+            elif(folder_number in people_ranked[:10]):
+                tp_rank10 += 1
+                tp_rank15 += 1
+                tp_rank20 += 1
+            elif(folder_number in people_ranked[:15]):
+                tp_rank15 += 1
+                tp_rank20 += 1
+            elif(folder_number in people_ranked[:20]):
+                tp_rank20 += 1            
+
 print(f"rank-1: {tp_rank1/count_all}")
 print(f"rank-5: {tp_rank5/count_all}")
+print(f"rank-10: {tp_rank10/count_all}")
+print(f"rank-15: {tp_rank15/count_all}")
+print(f"rank-20: {tp_rank20/count_all}")
